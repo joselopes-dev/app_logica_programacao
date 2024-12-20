@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogos de Preenchimento <br> de Lacunas</title>
+    <style>
+       
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #45a049;
+        }
+
+        h1 {
+            color: #000;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        select {
+            padding: 10px;
+            width: 90%;
+            max-width: 200px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #gameArea {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #gameContent {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        pre {
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            width: 60px;
+            max-width: 100px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #messageArea {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            select {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            #gameArea {
+                width: 95%;
+            }
+
+            button {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                width: 40%;
+                max-width: 60px;
+            }
+
+            pre {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+                margin-top: 20px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                width: 50px;
+            }
+
+            pre {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body onload="changeGame();">
+    <h1>Jogos de Preenchimento de Lacunas</h1>
+
+    <!-- Seletor de jogos -->
+    <label for="gameSelector">Escolha o jogo:</label>
+    <select id="gameSelector" onchange="changeGame()">
+        <option value="1">Jogo 1: Média Simples</option>
+        <option value="2">Jogo 2: Área do Triângulo</option>
+        <option value="3">Jogo 3: Número Par ou Ímpar</option>
+        <option value="4">Jogo 4: Soma de Números</option>
+        <option value="5">Jogo 5: Calcular o Quadrado</option>
+        <option value="6">Jogo 6: Verificar Maioridade</option>
+        <option value="7">Jogo 7: Cálculo da Circunferência</option>
+        <option value="8">Jogo 8: Calcular Fatorial</option>
+        <option value="9">Jogo 9: Cálculo de Média Ponderada</option>
+        <option value="10">Jogo 10: Conversão de Temperatura</option>
+    </select>
+
+    <!-- Área para exibição do jogo -->
+    <div id="gameArea">
+        <h2 id="gameTitle">Selecione um jogo</h2>
+        <div id="gameContent"></div> 
+        
+        <!-- Área para mensagens -->
+        <div id="messageArea"></div>
+    </div>
+
+    
+
+    <script>
+        const games = {
+            1: {
+                title: "Média Simples",
+                content: `
+                    <p>Complete o algoritmo para calcular a média de duas notas:</p>
+                    <pre>
+Algoritmo media
+var
+    nota1, nota2, media : <input type="text" id="input1" />
+inicio
+    escreva("Digite a primeira nota")
+    leia(<input type="text" id="input2" />)
+    escreva("Digite a segunda nota")
+    leia(<input type="text" id="input3" />)
+    media = (<input type="text" id="input4" /> + <input type="text" id="input5" />) / 2
+    escreva("A média é: ", <input type="text" id="input6" />)
+fim
+                    </pre>
+                    <button onclick="checkAnswers(1)">Verificar Respostas</button>
+                `,
+                answers: ["real", "nota1", "nota2", "nota1", "nota2", "media"]
+            },
+            2: {
+                title: "Área do Triângulo",
+                content: `
+                    <p>Complete o algoritmo para calcular a área de um triângulo:</p>
+                    <pre>
+Algoritmo area_triangulo
+var
+    base, altura, area : <input type="text" id="input1" />
+inicio
+    escreva("Digite a base do triângulo")
+    leia(<input type="text" id="input2" />)
+    escreva("Digite a altura do triângulo")
+    leia(<input type="text" id="input3" />)
+    area = (<input type="text" id="input4" /> * <input type="text" id="input5" />) / 2
+    escreva("A área é: ", <input type="text" id="input5" />)
+fim
+                    </pre>
+                    <button onclick="checkAnswers(2)">Verificar Respostas</button>
+                `,
+                answers: ["real", "base", "altura", "base", "altura", "area"]
+            },
+
+            3: {
+    title: "Número Par ou Ímpar",
+    content: `
+        <p>Complete o algoritmo para verificar se o número digitado é par ou ímpar:</p>
+        <pre>
+Algoritmo par_ou_impar
+var
+    numero : <input type="text" id="input1" />
+inicio
+    escreva("Digite um número")
+    leia(<input type="text" id="input2" />)
+    se (<input type="text" id="input3" /> % 2 = 0) então
+        escreva("O número é par")
+    senao
+        escreva("O número é ímpar")
+fim
+        </pre>
+        <button onclick="checkAnswers(3)">Verificar Respostas</button>
+    `,
+    answers: ["inteiro", "numero", "numero"]
+},
+
+4: {
+    title: "Soma de Números",
+    content: `
+        <p>Complete o algoritmo para somar dois números:</p>
+        <pre>
+Algoritmo soma
+var
+    num1, num2, resultado : <input type="text" id="input1" />
+inicio
+    escreva("Digite o primeiro número")
+    leia(<input type="text" id="input2" />)
+    escreva("Digite o segundo número")
+    leia(<input type="text" id="input3" />)
+    resultado = <input type="text" id="input4" /> + <input type="text" id="input5" />
+    escreva("A soma é: ", <input type="text" id="input6" />)
+fim
+        </pre>
+        <button onclick="checkAnswers(4)">Verificar Respostas</button>
+    `,
+    answers: ["inteiro", "num1", "num2", "num1", "num2", "resultado"]
+}, 
+
+5: {
+    title: "Calcular o Quadrado",
+    content: `
+        <p>Complete o algoritmo para calcular o quadrado de um número:</p>
+        <pre>
+Algoritmo calcular_quadrado
+var
+    numero, resultado : <input type="text" id="input1" />
+inicio
+    escreva("Digite um número")
+    leia(<input type="text" id="input2" />)
+    resultado = <input type="text" id="input3" /> * <input type="text" id="input4" />
+    escreva("O quadrado do número é: ", <input type="text" id="input5" />)
+fim
+        </pre>
+        <button onclick="checkAnswers(5)">Verificar Respostas</button>
+    `,
+    answers: ["real", "numero", "numero", "numero", "resultado"]
+},
+
+6: {
+    title: "Verificar Maioridade",
+    content: `
+        <p>Complete o algoritmo para verificar se uma pessoa é maior de idade:</p>
+        <pre>
+Algoritmo verificar_maioridade
+var
+    idade : <input type="text" id="input1" />
+inicio
+    escreva("Digite sua idade")
+    leia(<input type="text" id="input2" />)
+    se (<input type="text" id="input3" /> >= 18) então
+        escreva("Você é maior de idade")
+    senao
+        escreva("Você é menor de idade")
+fim
+        </pre>
+        <button onclick="checkAnswers(6)">Verificar Respostas</button>
+    `,
+    answers: ["inteiro", "idade", "idade"]
+},
+
+7: {
+    title: "Cálculo da Circunferência",
+    content: `
+        <p>Complete o algoritmo para calcular a circunferência de um círculo:</p>
+        <pre>
+Algoritmo calcular_circunferencia
+constante
+    PI = 3.14
+var
+    raio, circunferencia : <input type="text" id="input1" />
+inicio
+    escreva("Digite o raio do círculo")
+    leia(<input type="text" id="input2" />)
+    circunferencia = 2 * <input type="text" id="input3" /> * <input type="text" id="input4" />
+    escreva("A circunferência é: ", <input type="text" id="input5" />)
+fim
+        </pre>
+        <button onclick="checkAnswers(7)">Verificar Respostas</button>
+    `,
+    answers: ["real", "raio", "PI", "raio", "circunferencia"]
+},
+
+8: {
+    title: "Calcular Fatorial",
+    content: `
+        <p>Complete o algoritmo para calcular o fatorial de um número:</p>
+        <pre>
+Algoritmo calcular_fatorial
+var
+    numero, fatorial, i : <input type="text" id="input1" />
+inicio
+    escreva("Digite um número")
+    leia(<input type="text" id="input2" />)
+    fatorial = 1
+    para i de 1 ate <input type="text" id="input3" /> faca
+        fatorial = fatorial * i
+    fimpara
+    escreva("O fatorial é: ", <input type="text" id="input4" />)
+fim
+        </pre>
+        <button onclick="checkAnswers(8)">Verificar Respostas</button>
+    `,
+    answers: ["inteiro", "numero", "numero", "fatorial"]
+},
+
+9: {
+    title: "Cálculo de Média Ponderada",
+    content: `
+        <p>Complete o algoritmo para calcular a média ponderada de duas notas:</p>
+        <pre>
+Algoritmo media_ponderada
+var
+    nota1, nota2, peso1, peso2, media : <input type="text" id="input1" />
+inicio
+    escreva("Digite a primeira nota")
+    leia(<input type="text" id="input2" />)
+    escreva("Digite o peso da primeira nota")
+    leia(<input type="text" id="input3" />)
+    escreva("Digite a segunda nota")
+    leia(<input type="text" id="input4" />)
+    escreva("Digite o peso da segunda nota")
+    leia(<input type="text" id="input5" />)
+    media = (<input type="text" id="input6" /> * <input type="text" id="input7" /> + <input type="text" id="input8" /> * <input type="text" id="input9" />) / (<input type="text" id="input10" /> + <input type="text" id="input11" />)
+    escreva("A média ponderada é: ", <input type="text" id="input12" />)
+fim
+        </pre>
+        <button onclick="checkAnswers(9)">Verificar Respostas</button>
+    `,
+    answers: ["real", "nota1", "peso1", "nota2", "peso2", "nota1", "peso1", "nota2", "peso2", "peso1", "peso2", "media"]
+},
+
+10: {
+    title: "Conversão de Temperatura",
+    content: `
+        <p>Complete o algoritmo para converter uma temperatura de Celsius para Fahrenheit:</p>
+        <pre>
+Algoritmo conversao_temperatura
+var
+    celsius, fahrenheit : <input type="text" id="input1" />
+inicio
+    escreva("Digite a temperatura em Celsius")
+    leia(<input type="text" id="input2" />)
+    fahrenheit = (<input type="text" id="input3" /> * 9 / 5) + 32
+    escreva("A temperatura em Fahrenheit é: ", <input type="text" id="input4" />)
+fim
+        </pre>
+        <button onclick="checkAnswers(10)">Verificar Respostas</button>
+    `,
+    answers: ["real", "celsius", "celsius", "fahrenheit"]
+}
+        };
+
+        function changeGame() {
+            const selectedGame = document.getElementById("gameSelector").value;
+            const gameTitle = document.getElementById("gameTitle");
+            const gameContent = document.getElementById("gameContent");
+            const messageArea = document.getElementById("messageArea");
+
+            messageArea.innerText = ""; // Limpar mensagem ao trocar de jogo
+
+            if (games[selectedGame]) {
+                gameTitle.innerText = games[selectedGame].title;
+                gameContent.innerHTML = games[selectedGame].content;
+            } else {
+                gameTitle.innerText = "Selecione um jogo";
+                gameContent.innerHTML = "";
+            }
+        }
+
+        function checkAnswers(gameId) {
+            const inputs = document.querySelectorAll("#gameContent input");
+            const answers = games[gameId].answers;
+            let correct = true;
+
+            inputs.forEach((input, index) => {
+                if (input.value.trim() !== answers[index]) {
+                    input.style.backgroundColor = "red";
+                    correct = false;
+                } else {
+                    input.style.backgroundColor = "lightgreen";
+                }
+            });
+
+            const messageArea = document.getElementById("messageArea");
+
+            if (correct) {
+                messageArea.style.color = "#4CAF50";
+                messageArea.innerText = "Parabéns! Todas as respostas estão corretas!";
+            } else {
+                messageArea.style.color = "red";
+                messageArea.innerText = "Algumas respostas estão incorretas. Tente novamente!";
+            }
+        }
+    </script>
+</body>
+</html>
